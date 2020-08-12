@@ -908,17 +908,6 @@ to not replace existing value."
   (when ranger-key
     (define-key ranger-mode-map ranger-key 'ranger-to-dired))
 
-  (with-eval-after-load "evil"
-    ;; turn off evilified buffers for evilify usage
-    (evil-set-initial-state 'ranger-mode 'motion)
-
-    ;; allow cursor to be cleared
-    (when ranger-hide-cursor
-      (defadvice evil-refresh-cursor (around evil activate)
-        (unless (or (eq major-mode 'ranger-mode)
-                    (memq (current-buffer) ranger-parent-buffers))
-          ad-do-it))))
-
   ;; make sure isearch is cleared before we delete the buffer on exit
   (add-hook 'ranger-mode-hook '(lambda () (setq isearch--current-buffer nil))))
 
@@ -2069,7 +2058,6 @@ R   : ranger . el location
              (when (member window ranger-parent-windows)
                (with-selected-window window
                  (ranger-parent-child-select)
-                 (ranger-hide-the-cursor)
                  ))))
          nil nil 'nomini))
 
@@ -2150,7 +2138,6 @@ slot)."
           (make-local-variable 'font-lock-defaults)
           (setq font-lock-defaults '((dired-font-lock-keywords) nil t))
           (buffer-disable-undo)
-          (setq-local cursor-type nil)
           (erase-buffer)
           (turn-on-font-lock)
           (insert-directory entry (concat dired-listing-switches ranger-sorting-switches) nil t)
@@ -2175,7 +2162,6 @@ is set, show literally instead of actual buffer."
                              (generate-new-buffer "*ranger-prev*"))))
         (with-current-buffer temp-buffer
           (buffer-disable-undo)
-          (setq-local cursor-type nil)
           (erase-buffer)
           (font-lock-mode -1)
           (insert-file-contents entry-name)
@@ -2286,7 +2272,6 @@ is set, show literally instead of actual buffer."
                                                                                   ranger-width-parents)))))))))
               )
             (with-current-buffer preview-buffer
-              (setq-local cursor-type nil)
               (setq-local mouse-1-click-follows-link nil)
               (local-set-key (kbd  "<mouse-1>") #'(lambda ()
                                                     (interactive)
@@ -2294,8 +2279,7 @@ is set, show literally instead of actual buffer."
                                                     (call-interactively
                                                      'ranger-find-file)))
               (when ranger-modify-header
-                (setq header-line-format `(:eval (,ranger-header-func))))
-              (ranger-hide-the-cursor))
+                (setq header-line-format `(:eval (,ranger-header-func)))))
             (when (not (memq preview-buffer original-buffer-list))
               (add-to-list 'ranger-preview-buffers preview-buffer))
             (setq ranger-preview-window preview-window)
@@ -2581,7 +2565,6 @@ fraction of the total frame size"
       (message "File opened, exiting ranger")
       (ranger-disable)
       (find-file buffer-fn)
-      (setq-local cursor-type t)
       (setq header-line-format ranger-pre-header-format)
       (when ranger-return-to-ranger
         (add-hook 'kill-buffer-hook 'ranger nil t)))
@@ -3072,7 +3055,6 @@ properly provides the modeline in dired mode. "
 
   (ranger-show-file-details)
   (ranger-set-modeline)
-  (ranger-hide-the-cursor)
   (run-hooks 'ranger-mode-load-hook)
 
   (if (r--fget ranger-minimal)
@@ -3091,10 +3073,6 @@ properly provides the modeline in dired mode. "
   (ranger--message "Ranger loaded")
   )
 
-(defun ranger-hide-the-cursor ()
-  (when (and buffer-read-only ranger-hide-cursor)
-    (setq-local cursor-type nil))
-  (hl-line-mode t))
 
 (defvar ranger--debug nil)
 (defvar ranger--debug-period 1.5)
@@ -3134,7 +3112,6 @@ properly provides the modeline in dired mode. "
 
 \\{ranger-mode-map}"
   :group 'ranger
-  (setq-local cursor-type nil)
   ;; (setq-local ranger-mode nil)
   (use-local-map ranger-mode-map)
   ;; (advice-add 'dired-readin :after #'ranger-setup-dired-buffer)
