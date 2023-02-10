@@ -68,7 +68,6 @@
 
 ;;; Code:
 
-(declare-function dired-kill-tree "dired-aux")
 (declare-function image-dired-display-window-height "image-dired")
 (declare-function image-dired-display-window-width "image-dired")
 (declare-function image-dired-create-display-image-buffer "image-dired")
