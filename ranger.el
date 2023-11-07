@@ -226,7 +226,7 @@
   :type 'float)
 
 ;;;###autoload
-(defcustom ranger-key [?\C-p]
+(defcustom ranger-key [?\C-0]
   "Key in `dired-mode' used to toggle `ranger-mode'."
   :group 'ranger
   :type 'sexp)
@@ -513,7 +513,9 @@ Selective hiding of specific attributes can be controlled by MASK."
     (define-key map "G"                'ranger-goto-bottom)
     (define-key map "h"                'ranger-up-directory)
     (define-key map "j"                'ranger-next-file)
+    (define-key map "C-n"              'ranger-next-file)
     (define-key map "k"                'ranger-prev-file)
+    (define-key map "C-p"              'ranger-prev-file)
     (define-key map "l"                'ranger-find-file)
     (define-key map (kbd "C-f")        'ranger-page-down)
     (define-key map (kbd "C-b")        'ranger-page-up)
@@ -587,7 +589,6 @@ Selective hiding of specific attributes can be controlled by MASK."
     ;; TODO map zf   regexp filter
 
     ;; tabs
-    (define-key map (kbd "C-n")        'ranger-new-tab)
     (define-key map (kbd "C-w")        'ranger-close-tab)
     (define-key map (kbd "C-TAB")      'ranger-next-tab)
     (define-key map (kbd "C-S-TAB")    'ranger-prev-tab)
@@ -732,7 +733,6 @@ Selective hiding of specific attributes can be controlled by MASK."
     ;; TODO map zf   regexp filter
 
     ;; tabs
-    (define-key map (kbd "C-n")        'ranger-new-tab)
     (define-key map (kbd "C-w")        'ranger-close-tab)
     (define-key map (kbd "C-TAB")      'ranger-next-tab)
     (define-key map (kbd "C-S-TAB")    'ranger-prev-tab)
